@@ -3,8 +3,9 @@
     <div class="row center-block">
       <div class="col-md-12">
         <div class="box">
-          <div class="box-header">
-            <h3 class="box-title">Danh sách Nhật ký sản lượng khoán làm riêng</h3>
+          <div class="col-md-12 box-header" style="display: flex; justify-content: flex-start;">
+            <div class="nkslk-tabs" @click="chooseReportBySelf()" >Nhật ký sản lượng khoán làm riêng</div>
+            <div class="nkslk-tabs" @click="chooseReportByTogether()" >Nhật ký sản lượng khoán làm chung</div>
             <!-- <button type="button" @click="addClick()" class="btn btn-primary" data-toggle="modal" data-target="#dialogModal">
               Thêm phòng ban
             </button> -->
@@ -20,7 +21,7 @@
 
               <div class="row">
                 <div class="col-sm-12 table-responsive">
-                  <table class="table table-bordered table-striped dataTable">
+                  <table v-if="IsShowBySelf" class="table table-bordered table-striped dataTable">
                     <thead>
                       <tr role="row">
                         <th>Mã NKSLK</th>
@@ -35,6 +36,34 @@
                     <tbody>
                       <tr
                         v-for="report in reports" :key="report" class="even" role="row">
+                        <td class="sorting_1">{{ report.ma_nkslk }}</td>
+                        <td class="sorting_1">{{ report.ma_congnhan }}</td>
+                        <td class="sorting_1">{{ report.hoten }}</td>
+                        <td class="sorting_1">{{ report.ngaybatdau }}</td>
+                        <td class="sorting_1">{{ report.thoigian_batdau }}</td>
+                        <td class="sorting_1">{{ report.thoigian_ketthuc }}</td>
+                        <td>
+                          <i class="fa fa-pencil-square-o" data-toggle="modal" data-target="#dialogModal" @click="editClick(dep)" style="font-size: 18px;"></i> 
+                          <i class="fa fa-trash-o" @click="deleteClick(dep.ma_phongban)"  style="margin-left:20px;font-size: 18px;"></i>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <table v-if="!IsShowBySelf" class="table table-bordered table-striped dataTable">
+                    <thead>
+                      <tr role="row">
+                        <th>Mã NKSLK</th>
+                        <th>Mã công nhân </th>
+                        <th>Tên công nhân </th>
+                        <th>Ngày bắt đầu </th>
+                        <th>Thời gian bắt đầu ca làm việc </th>
+                        <th>Thời gian kết thúc ca làm việc </th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="report in reportsByTogether" :key="report" class="even" role="row">
                         <td class="sorting_1">{{ report.ma_nkslk }}</td>
                         <td class="sorting_1">{{ report.ma_congnhan }}</td>
                         <td class="sorting_1">{{ report.hoten }}</td>
@@ -88,18 +117,25 @@ export default {
   data() {
     return {
       reports: [],
+      reportsByTogether: [],
       nkslkId: 0,
       employeeId: 0,
       employeeName:"",
       startDate:"",
       startTime:"",
-      endTime:""
+      endTime:"",
+      IsShowBySelf: true,
     };
   },
   methods: {
-    refreshData() {
-      axios.get("http://localhost:43932/api/report").then((response) => {
+    getReportBySelf() {
+      axios.get("http://localhost:43932/api/report/ReportBySelf").then((response) => {
         this.reports = response.data;
+      });
+    },
+    getReportByTogether() {
+      axios.get("http://localhost:43932/api/report/ReportByTogether").then((response) => {
+        this.reportsByTogether = response.data;
       });
     },
     addClick(){
@@ -148,14 +184,32 @@ export default {
             });
     
     },
+    chooseReportBySelf(){
+      this.IsShowBySelf =true;
+    },
+    chooseReportByTogether(){
+      this.IsShowBySelf =false;
+    }
   },
   mounted() {
-    this.refreshData();
+    this.getReportBySelf();
+    this.getReportByTogether();
   },
 };
 </script>
 
 <style>
+
+.nkslk-tabs{
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 5px;
+  margin-right: 10px;
+  font-size: 16px;
+}
+.nkslk-tabs:hover{
+  background-color: #ecf0f5;
+}
 /* Using the bootstrap style, but overriding the font to not draw in
    the Glyphicons Halflings font as an additional requirement for sorting icons.
 

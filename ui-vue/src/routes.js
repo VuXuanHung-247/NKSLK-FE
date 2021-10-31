@@ -8,7 +8,9 @@ import ProductsView from './components/views/Products.vue'
 import EmployeesView from './components/views/Employees/Employees.vue'
 import DepartmentsView from './components/views/Employees/Departments.vue'
 import CitysView from './components/views/Employees/Citys.vue'
-import ReportsView from './components/views/Reports.vue'
+import DailyReportsView from './components/views/Reports/DailyReports.vue'
+import CheckinView from './components/views/Reports/Checkin.vue'
+import SalaryView from './components/views/Reports/Salary.vue'
 import TablesView from './components/views/Tables.vue'
 import TasksView from './components/views/Tasks.vue'
 import SettingView from './components/views/Setting.vue'
@@ -60,9 +62,19 @@ const routes = [
         name: 'Quản lý Tỉnh/Thành phố'
         // meta: {description: 'Danh sách Sản phẩm'}
       }, {
-        path: 'reports',
-        component: ReportsView,
-        name: 'Báo cáo thống kê'
+        path: 'daily-reports',
+        component: DailyReportsView,
+        name: 'Danh sách nhật ký sản lượng khoán'
+        // meta: {description: 'Danh sách Sản phẩm'}
+      }, {
+        path: 'checkin',
+        component: CheckinView,
+        name: 'Bảng chấm công'
+        // meta: {description: 'Danh sách Sản phẩm'}
+      }, {
+        path: 'salary',
+        component: SalaryView,
+        name: 'Báo cáo Lương'
         // meta: {description: 'Danh sách Sản phẩm'}
       }, {
         path: 'setting',

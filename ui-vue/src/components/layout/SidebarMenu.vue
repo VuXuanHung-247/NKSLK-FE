@@ -21,6 +21,7 @@
         <span class="page">Quản lý Sản phẩm</span>
       </a>
     </router-link>
+    <!-- Quản lý công nhân -->
     <li class="treeview">
       <a href="#">
         <i class="fa fa-folder-o"></i>
@@ -50,12 +51,36 @@
         </router-link>
       </ul>
     </li>
-    <router-link tag="li" class="pageLink" to="/reports">
-      <a>
+    <!-- Báo cáo thống kê -->
+    <li class="treeview">
+      <a href="#">
+        <i class="fa fa-folder-o"></i>
+        <span class="treeview-title">Báo cáo thống kê</span>
+        <span class="pull-right-container pull-right">
+          <i class="fa fa-angle-left fa-fw"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <router-link tag="li" class="pageLink" to="/daily-reports">
+          <a>
+            <i class="fa fa-users"></i>
+            <span class="page">Làm chung/Làm riêng</span>
+          </a>
+        </router-link>
+        <router-link tag="li" class="pageLink" to="/checkin">
+          <a>
             <i class="fa fa-table"></i>
-            <span class="page">Báo cáo thống kê</span>
-        </a>
-    </router-link>    
+            <span class="page">Chấm công</span>
+          </a>
+        </router-link>
+        <router-link tag="li" class="pageLink" to="/salary">
+          <a>
+            <i class="fa fa-table"></i>
+            <span class="page">Lương</span>
+          </a>
+        </router-link>
+      </ul>
+    </li> 
     <router-link tag="li" class="pageLink" to="/setting">
       <a>
         <i class="fa fa-cog"></i>
