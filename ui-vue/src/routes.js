@@ -12,10 +12,12 @@ import DailyReportsView from './components/views/Reports/DailyReports.vue'
 import CheckinView from './components/views/Reports/Checkin.vue'
 import SalaryView from './components/views/Reports/Salary.vue'
 import TablesView from './components/views/Tables.vue'
-import TasksView from './components/views/Tasks.vue'
+import TasksView from './components/views/TasksManagement/Tasks.vue'
 import SettingView from './components/views/Setting.vue'
+import UnitTasksView from './components/views/TasksManagement/UnitTasks.vue'
 
 // Routes
+/* eslint-disable */
 const routes = [
   {
     path: '/login',
@@ -40,6 +42,11 @@ const routes = [
         path: 'tasks',
         component: TasksView,
         name: 'Quản lý Công việc'
+        // meta: {description: 'Danh sách Công việc'}
+      },{
+        path: 'unittasks',
+        component: UnitTasksView,
+        name: 'Đơn vị khoán'
         // meta: {description: 'Danh sách Công việc'}
       }, {
         path: 'products',
