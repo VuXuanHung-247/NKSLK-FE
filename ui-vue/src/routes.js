@@ -74,7 +74,7 @@ const routes = [
       }, {
         path: 'salary',
         component: SalaryView,
-        name: 'Báo cáo Lương'
+        name: 'Bảng lương'
         // meta: {description: 'Danh sách Sản phẩm'}
       }, {
         path: 'setting',

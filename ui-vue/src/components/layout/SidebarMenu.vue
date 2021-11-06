@@ -45,7 +45,7 @@
         </router-link>
         <router-link tag="li" class="pageLink" to="/citys">
           <a>
-            <i class="fa fa-table"></i>
+            <i class="fa fa-building-o"></i>
             <span class="page">Tỉnh/Thành phố</span>
           </a>
         </router-link>
@@ -54,7 +54,7 @@
     <!-- Báo cáo thống kê -->
     <li class="treeview">
       <a href="#">
-        <i class="fa fa-folder-o"></i>
+        <i class="fa fa-list-alt"></i>
         <span class="treeview-title">Báo cáo thống kê</span>
         <span class="pull-right-container pull-right">
           <i class="fa fa-angle-left fa-fw"></i>
@@ -63,20 +63,20 @@
       <ul class="treeview-menu">
         <router-link tag="li" class="pageLink" to="/daily-reports">
           <a>
-            <i class="fa fa-users"></i>
-            <span class="page">Làm chung/Làm riêng</span>
+            <i class="fa fa-group"></i>
+            <span class="page">Nhật ký sản lượng khoán</span>
           </a>
         </router-link>
         <router-link tag="li" class="pageLink" to="/checkin">
           <a>
-            <i class="fa fa-table"></i>
-            <span class="page">Chấm công</span>
+            <i class="fa fa-calculator"></i>
+            <span class="page">Bảng chấm công</span>
           </a>
         </router-link>
         <router-link tag="li" class="pageLink" to="/salary">
           <a>
-            <i class="fa fa-table"></i>
-            <span class="page">Lương</span>
+            <i class="fa fa-money"></i>
+            <span class="page">Bảng lương</span>
           </a>
         </router-link>
       </ul>
