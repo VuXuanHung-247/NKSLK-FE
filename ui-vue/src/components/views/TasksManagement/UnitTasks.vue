@@ -198,16 +198,7 @@ export default {
         });
     },
     deleteClick(data) {
-      if (!confirm("Bạn chắc chắn muốn xóa phòng ban này?")) {
-        return;
-      }
-      axios
-        .post("http://localhost:43932/api/UnitTasks/Delete", {
-          unittasks_id: data.unittasks_id,
-        })
-        .then((response) => {
-          this.refreshData();
-        });
+      
     },
   },
   mounted() {

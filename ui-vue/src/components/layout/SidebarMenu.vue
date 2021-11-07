@@ -11,7 +11,7 @@
     <li class="treeview">
       <a href="#">
         <i class="fa fa-folder-o"></i>
-        <span class="treeview-title">Quản lý Công nhân</span>
+        <span class="treeview-title">Quản lý Công việc</span>
         <span class="pull-right-container pull-right">
           <i class="fa fa-angle-left fa-fw"></i>
         </span>
