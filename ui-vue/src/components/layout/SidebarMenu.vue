@@ -7,20 +7,44 @@
         <span class="page">Tổng quan</span>
       </a>
     </router-link>
-
-    <!-- <li class="header">ME</li> -->
-    <router-link tag="li" class="pageLink" to="/tasks">
+    <router-link tag="li" class="pageLink" to="/dailywork">
       <a>
-        <i class="fa fa-tasks"></i>
-        <span class="page">Quản lý Công việc</span>
+        <i class="fa fa-desktop"></i>
+        <span class="page">NKSLK</span>
       </a>
     </router-link>
+     <!-- Quản lý công việc -->
+    <li class="treeview">
+      <a href="#">
+        <i class="fa fa-folder-o"></i>
+        <span class="treeview-title">Quản lý Công việc</span>
+        <span class="pull-right-container pull-right">
+          <i class="fa fa-angle-left fa-fw"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <router-link tag="li" class="pageLink" to="/tasks">
+          <a>
+            <i class="fa fa-users"></i>
+            <span class="page">Công việc</span>
+          </a>
+        </router-link>
+        <router-link tag="li" class="pageLink" to="/unittasks">
+          <a>
+            <i class="fa fa-table"></i>
+            <span class="page">Đơn vị khoán</span>
+          </a>
+        </router-link>
+      </ul>
+    </li>
+     <!-- End Quản lý công việc -->
     <router-link tag="li" class="pageLink" to="/products">
       <a>
         <i class="fa fa-product-hunt"></i>
         <span class="page">Quản lý Sản phẩm</span>
       </a>
     </router-link>
+    <!-- Quản lý công nhân -->
     <li class="treeview">
       <a href="#">
         <i class="fa fa-folder-o"></i>
@@ -44,18 +68,42 @@
         </router-link>
         <router-link tag="li" class="pageLink" to="/citys">
           <a>
-            <i class="fa fa-table"></i>
+            <i class="fa fa-building-o"></i>
             <span class="page">Tỉnh/Thành phố</span>
           </a>
         </router-link>
       </ul>
     </li>
-    <router-link tag="li" class="pageLink" to="/reports">
-      <a>
-            <i class="fa fa-table"></i>
-            <span class="page">Báo cáo thống kê</span>
-        </a>
-    </router-link>    
+    <!-- Báo cáo thống kê -->
+    <li class="treeview">
+      <a href="#">
+        <i class="fa fa-list-alt"></i>
+        <span class="treeview-title">Báo cáo thống kê</span>
+        <span class="pull-right-container pull-right">
+          <i class="fa fa-angle-left fa-fw"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <router-link tag="li" class="pageLink" to="/daily-reports">
+          <a>
+            <i class="fa fa-group"></i>
+            <span class="page">Nhật ký sản lượng khoán</span>
+          </a>
+        </router-link>
+        <router-link tag="li" class="pageLink" to="/checkin">
+          <a>
+            <i class="fa fa-calculator"></i>
+            <span class="page">Bảng chấm công</span>
+          </a>
+        </router-link>
+        <router-link tag="li" class="pageLink" to="/salary">
+          <a>
+            <i class="fa fa-money"></i>
+            <span class="page">Bảng lương</span>
+          </a>
+        </router-link>
+      </ul>
+    </li>
     <router-link tag="li" class="pageLink" to="/setting">
       <a>
         <i class="fa fa-cog"></i>
@@ -78,9 +126,10 @@
   </ul>
 </template>
 <script>
+/* eslint-disable */
 export default {
-  name: 'SidebarMenu'
-}
+  name: "SidebarMenu",
+};
 </script>
 <style>
 /* override default */
