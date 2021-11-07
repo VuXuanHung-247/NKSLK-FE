@@ -7,6 +7,12 @@
         <span class="page">Tổng quan</span>
       </a>
     </router-link>
+    <router-link tag="li" class="pageLink" to="/dailywork">
+      <a>
+        <i class="fa fa-desktop"></i>
+        <span class="page">Nhật ký sản lượng khoán</span>
+      </a>
+    </router-link>
      <!-- Quản lý công việc -->
     <li class="treeview">
       <a href="#">
