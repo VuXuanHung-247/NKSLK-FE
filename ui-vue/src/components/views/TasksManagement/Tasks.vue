@@ -11,8 +11,36 @@
               data-toggle="modal"
               data-target="#dialogModal"
             >
-              Thêm phòng ban
+              Thêm công việc
             </button>
+            <button
+              type="button"
+              @click="refreshData()"
+              class="btn btn-primary"
+            >
+              refreshData
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="statisticalByMinNKSLK()"
+            >
+              Danh sách Công việc có ít NKSLK nhất
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="statisticalByMaxNKSLK()"
+            >
+              Danh sách Công việc có nhiều NKSLK nhất
+            </button>
+            <input
+              v-model="serachByPriceInput"
+              type="number"
+              class="form-control"
+              placeholder="Tìm kiếm công việc theo đơn giá"
+              style="border-radius: 3px; margin-top: 10px; width: 300px"
+            />
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -43,6 +71,7 @@
                         <th>Hệ số khoán</th>
                         <th>Định mức lao động</th>
                         <th>Đơn giá</th>
+                        <th v-if="statisticalByNKSLK">Số lượng NKSLK</th>
                         <th>Thao tác</th>
                       </tr>
                     </thead>
@@ -58,8 +87,11 @@
                         <td class="sorting_1">{{ dep.unittasks_name }}</td>
                         <td class="sorting_1">{{ dep.litmit_unit }}</td>
                         <td class="sorting_1">{{ dep.limit_rate }}</td>
-                        <td class="litmit_work">{{ dep.tasks_name }}</td>
+                        <td class="litmit_work">{{ dep.litmit_work }}</td>
                         <td class="sorting_1">{{ dep.price }}</td>
+                        <td v-if="statisticalByNKSLK" class="litmit_work">
+                          {{ dep.quantityNKSLK }}
+                        </td>
 
                         <td>
                           <i
@@ -208,22 +240,51 @@ import axios from "axios";
 export default {
   data() {
     return {
+      serachByPriceInput: 0,
       unitTasks: [],
       //chứa dữ liệu data
       tasks: [],
       tasks_id: 0,
-      tasks_name:'',
-      unittasks_id:0,
-      litmit_unit:0,
-      limit_rate:0,
-      litmit_work:0,
-      price:0,
+      tasks_name: "",
+      unittasks_id: 0,
+      litmit_unit: 0,
+      limit_rate: 0,
+      litmit_work: 0,
+      price: 0,
+      statisticalByNKSLK: false,
       //
       modalTitle: "",
     };
   },
+  watch: {
+    "serachByPriceInput"() {
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        this.filterTasksByPrice();
+      }, 700);
+    },
+  },
   methods: {
+    filterTasksByPrice() {
+    },
+    statisticalByMinNKSLK() {
+      this.statisticalByNKSLK = true;
+      axios
+        .get("http://localhost:43932/api/Tasks/GetMinJobByNKSLK")
+        .then((response) => {
+          this.tasks = response.data;
+        });
+    },
+    statisticalByMaxNKSLK() {
+      this.statisticalByNKSLK = true;
+      axios
+        .get("http://localhost:43932/api/Tasks/GetMaxJobByNKSLK")
+        .then((response) => {
+          this.tasks = response.data;
+        });
+    },
     refreshData() {
+      this.statisticalByNKSLK = false;
       axios.get("http://localhost:43932/api/Tasks").then((response) => {
         this.tasks = response.data;
       });
@@ -236,23 +297,26 @@ export default {
       this.litmit_unit = 0;
       this.limit_rate = 0;
       this.litmit_work = 0;
-      axios.get("http://localhost:43932/api/UnitTasks/GetAllUnitTasks").then((response) => {
-        this.unitTasks = response.data;
-      });
+      axios
+        .get("http://localhost:43932/api/UnitTasks/GetAllUnitTasks")
+        .then((response) => {
+          this.unitTasks = response.data;
+        });
     },
     editClick(dep) {
       this.modalTitle = "Sửa công việc";
       this.unittasks_id = dep.unittasks_id;
 
-      axios.get("http://localhost:43932/api/UnitTasks/GetAllUnitTasks").then((response) => {
-        this.unitTasks = response.data;
-      });
+      axios
+        .get("http://localhost:43932/api/UnitTasks/GetAllUnitTasks")
+        .then((response) => {
+          this.unitTasks = response.data;
+        });
       this.tasks_id = dep.tasks_id;
       this.tasks_name = dep.tasks_name;
       this.litmit_unit = dep.litmit_unit;
       this.limit_rate = dep.limit_rate;
       this.litmit_work = dep.litmit_work;
-
     },
     createClick() {
       axios
@@ -282,9 +346,7 @@ export default {
           this.refreshData();
         });
     },
-    deleteClick(id) {
-      
-    },
+    deleteClick(id) {},
   },
   mounted() {
     this.refreshData();
