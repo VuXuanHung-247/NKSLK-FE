@@ -81,8 +81,8 @@
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
         >
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
+          <div class="modal-dialog" role="document" style="width: 1800px">
+            <div class="modal-content" style="">
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">
                   {{ modalTitle }}
@@ -96,15 +96,182 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body">
-                Tên đơn vị khoán
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="unittasks_name"
-                  placeholder=""
-                  style="border-radius: 3px"
-                />
+              <div style="display: flex">
+                <div class="modal-body">
+                  Ngày bắt đầu
+                  <input type="date" />
+                </div>
+                <div class="modal-body">
+                  Giờ bắt đầu
+                  <input type="datetime-local" />
+                </div>
+                <div class="modal-body">
+                  Giờ kết thúc
+                  <input type="datetime-local" />
+                </div>
+              </div>
+              <div class="box-body">
+                <div
+                  class="dataTables_wrapper form-inline dt-bootstrap"
+                  id="example1_wrapper"
+                >
+                  <div class="row" style="display: flex">
+                    <div class="col-sm-6" style="overflow: auto; height: 400px">
+                      <button type="button" class="btn btn-primary">
+                        Thêm
+                      </button>
+                      <table
+                        aria-describedby="example1_info"
+                        role="grid"
+                        id="example1"
+                        class="table table-bordered table-striped dataTable"
+                      >
+                        <thead>
+                          <tr role="row">
+                            <th>Công nhân</th>
+                            <th>Thời gian bắt đầu</th>
+                            <th>thời gian kết thúc</th>
+                            <th>Số giờ làm việc</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="sorting_1">
+                              <select
+                                style="
+                                  border-radius: 3px;
+                                  width: 100%;
+                                  height: 27px;
+                                "
+                              >
+                                <option value="null" selected>
+                                  Chọn công nhân
+                                </option>
+                                <option value="1">Công nhân 1</option>
+                                <option value="2">Công nhân 2</option>
+                                <option value="3">Công nhân 3</option>
+                              </select>
+                            </td>
+                            <td class="sorting_2">
+                              <input type="datetime-local" />
+                            </td>
+                            <td class="sorting_3">
+                              <input type="datetime-local" />
+                            </td>
+                            <td class="sorting_4">
+                              <input
+                                readonly
+                                type="text"
+                                class="form-control"
+                                style="
+                                  border-radius: 3px;
+                                  width: 100%;
+                                  height: 27px;
+                                "
+                              />
+                            </td>
+                            <td>
+                              <i
+                                class="fa fa-trash-o"
+                                style="margin-left: 20px; font-size: 18px"
+                              ></i>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div
+                      class="col-sm-6"
+                      style="overflow: auto; height: 400px; margin-right: 10px"
+                    >
+                      <button type="button" class="btn btn-primary">
+                        Thêm
+                      </button>
+                      <table
+                        aria-describedby="example1_info"
+                        role="grid"
+                        id="example1"
+                        class="table table-bordered table-striped dataTable"
+                      >
+                        <thead>
+                          <tr role="row">
+                            <th>Công việc</th>
+                            <th>Sản phẩm</th>
+                            <th>Số lượng thực tế</th>
+                            <th>Số lô sản phẩm</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="sorting_1">
+                              <select
+                                style="
+                                  border-radius: 3px;
+                                  width: 100%;
+                                  height: 27px;
+                                "
+                              >
+                                <option value="null" selected>
+                                  Chọn công việc
+                                </option>
+                                <option value="1">công việc A</option>
+                                <option value="2">công việc B</option>
+                                <option value="3">công việc C</option>
+                              </select>
+                            </td>
+                            <td class="sorting_2">
+                              <select
+                                style="
+                                  border-radius: 3px;
+                                  width: 100%;
+                                  height: 27px;
+                                "
+                              >
+                                <option value="null" selected>
+                                  Chọn công việc
+                                </option>
+                                <option value="1">công việc A</option>
+                                <option value="2">công việc B</option>
+                                <option value="3">công việc C</option>
+                              </select>
+                            </td>
+                            <td class="sorting_3">
+                              <input
+                                type="text"
+                                class="form-control"
+                                style="
+                                  border-radius: 3px;
+                                  width: 100%;
+                                  height: 27px;
+                                "
+                              />
+                            </td>
+                            <td class="sorting_4">
+                              <input
+                                type="text"
+                                class="form-control"
+                                style="
+                                  border-radius: 3px;
+                                  width: 100%;
+                                  height: 27px;
+                                "
+                              />
+                            </td>
+                            <td>
+                              <i
+                                class="fa fa-trash-o"
+                                style="margin-left: 20px; font-size: 18px"
+                              ></i>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.box-body -->
               </div>
               <div class="modal-footer">
                 <button
@@ -145,6 +312,8 @@ import axios from "axios";
 export default {
   data() {
     return {
+      detailTask:[],
+      detailEmployee:[],
       unitTasks: [],
       unittasks_id: 0,
       unittasks_name: "",
@@ -169,7 +338,7 @@ export default {
         });
     },
     addClick() {
-      this.modalTitle = "Thêm đơn vị khoán";
+      this.modalTitle = "Thêm Nhật ký sản lượng khoán";
       this.unittasks_id = 0;
       this.unittasks_name = "";
     },
@@ -197,9 +366,7 @@ export default {
           this.refreshData();
         });
     },
-    deleteClick(data) {
-      
-    },
+    deleteClick(data) {},
   },
   mounted() {
     this.refreshData();
@@ -235,5 +402,8 @@ table.dataTable thead .sorting_asc:after {
 
 table.dataTable thead .sorting_desc:after {
   content: "\f0de";
+}
+.modal-open .modal {
+  overflow: hidden;
 }
 </style>

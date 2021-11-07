@@ -10,7 +10,7 @@
     <router-link tag="li" class="pageLink" to="/dailywork">
       <a>
         <i class="fa fa-desktop"></i>
-        <span class="page">Nhật ký sản lượng khoán</span>
+        <span class="page">NKSLK</span>
       </a>
     </router-link>
      <!-- Quản lý công việc -->
