@@ -4,7 +4,7 @@
 
     <div class="text-center col-sm-12">
       <!-- login form -->
-      <form @submit.prevent="checkCreds">
+      <form @submit.prevent="login">
         <div class="input-group">
           <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
           <input class="form-control" name="username" placeholder="Username" type="text" v-model="username">
@@ -24,7 +24,8 @@
 </template>
 
 <script>
-import api from '../api'
+/* eslint-disable */
+import axios from 'axios';
 
 export default {
   name: 'Login',
@@ -38,64 +39,81 @@ export default {
     }
   },
   methods: {
-    checkCreds() {
-      const { username, password } = this
-
-      this.toggleLoading()
-      this.resetResponse()
-      this.$store.commit('TOGGLE_LOADING')
-
-      /* Making API call to authenticate a user */
-      api
-        .request('post', '/login', { username, password })
-        .then(response => {
-          this.toggleLoading()
-
-          var data = response.data
-          /* Checking if error object was returned from the server */
-          if (data.error) {
-            var errorName = data.error.name
-            if (errorName) {
-              this.response =
-                errorName === 'InvalidCredentialsError'
-                  ? 'Username/Password incorrect. Please try again.'
-                  : errorName
-            } else {
-              this.response = data.error
-            }
-
-            return
-          }
-
-          /* Setting user in the state and caching record to the localStorage */
-          if (data.user) {
-            var token = 'Bearer ' + data.token
-
-            this.$store.commit('SET_USER', data.user)
-            this.$store.commit('SET_TOKEN', token)
-
-            if (window.localStorage) {
-              window.localStorage.setItem('user', JSON.stringify(data.user))
-              window.localStorage.setItem('token', token)
-            }
-
-            this.$router.push(data.redirect ? data.redirect : '/')
+    login() {
+      const { username, password } = this;
+      if(username === '' || password === '') {
+        this.response = 'Hãy nhập đầy đủ thông tin!';
+      } else {
+          axios.get('http://localhost:43932/api/account/' + username + '/' + password).then((res) => {
+          if(res.data.length === 0) {
+            this.response = 'Sai tên tài khoản hoặc mật khẩu! Xin thử lại...';
+          } else {
+             localStorage.setItem("user", JSON.stringify(res.data[0]));
+            this.response = res.data[0].ma_chucvu;
+            this.$router.push('/products');
           }
         })
-        .catch(error => {
-          this.$store.commit('TOGGLE_LOADING')
-          console.log(error)
-
-          this.response = 'Server appears to be offline'
-          this.toggleLoading()
-        })
-    },
-    toggleLoading() {
-      this.loading = this.loading === '' ? 'loading' : ''
-    },
-    resetResponse() {
-      this.response = ''
+      }
     }
+
+    // checkCreds() {
+    //   const { username, password } = this
+
+    //   this.toggleLoading()
+    //   this.resetResponse()
+    //   this.$store.commit('TOGGLE_LOADING')
+
+    //   /* Making API call to authenticate a user */
+    //   api
+    //     .request('post', '/login', { username, password })
+    //     .then(response => {
+    //       this.toggleLoading()
+
+    //       var data = response.data
+    //       /* Checking if error object was returned from the server */
+    //       if (data.error) {
+    //         var errorName = data.error.name
+    //         if (errorName) {
+    //           this.response =
+    //             errorName === 'InvalidCredentialsError'
+    //               ? 'Username/Password incorrect. Please try again.'
+    //               : errorName
+    //         } else {
+    //           this.response = data.error
+    //         }
+
+    //         return
+    //       }
+
+    //       /* Setting user in the state and caching record to the localStorage */
+    //       if (data.user) {
+    //         var token = 'Bearer ' + data.token
+
+    //         this.$store.commit('SET_USER', data.user)
+    //         this.$store.commit('SET_TOKEN', token)
+
+    //         if (window.localStorage) {
+    //           window.localStorage.setItem('user', JSON.stringify(data.user))
+    //           window.localStorage.setItem('token', token)
+    //         }
+
+    //         this.$router.push(data.redirect ? data.redirect : '/')
+    //       }
+    //     })
+    //     .catch(error => {
+    //       this.$store.commit('TOGGLE_LOADING')
+    //       console.log(error)
+
+    //       this.response = 'Server appears to be offline'
+    //       this.toggleLoading()
+    //     })
+    // },
+    // toggleLoading() {
+    //   this.loading = this.loading === '' ? 'loading' : ''
+    // },
+    // resetResponse() {
+    //   this.response = ''
+    // }
   }
 }
 </script>
