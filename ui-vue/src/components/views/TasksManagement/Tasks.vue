@@ -25,14 +25,42 @@
               class="btn btn-primary"
               @click="statisticalByMinNKSLK()"
             >
-              Danh sách Công việc có ít NKSLK nhất
+              Công việc có ít NKSLK nhất
             </button>
             <button
               type="button"
               class="btn btn-primary"
               @click="statisticalByMaxNKSLK()"
             >
-              Danh sách Công việc có nhiều NKSLK nhất
+              Công việc có nhiều NKSLK nhất
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="getTasksMinPrice()"
+            >
+              Công việc đơn giá thấp nhất
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="getTasksMaxPrice()"
+            >
+              Công việc đơn giá cao nhất
+            </button>
+            <button
+            @click="getTasksBiggerAVG()"
+              type="button"
+              class="btn btn-primary"
+            >
+              Công việc đơn giá lớn Đơn giá TB
+            </button>
+            <button
+            @click="getTasksLessAVG()"
+              type="button"
+              class="btn btn-primary"
+            >
+              Công việc đơn giá nhỏ Đơn giá TB
             </button>
             <input
               v-model="serachByPriceInput"
@@ -40,6 +68,7 @@
               class="form-control"
               placeholder="Tìm kiếm công việc theo đơn giá"
               style="border-radius: 3px; margin-top: 10px; width: 300px"
+              min="1" max="5"
             />
           </div>
           <!-- /.box-header -->
@@ -103,7 +132,7 @@
                           ></i>
                           <i
                             class="fa fa-trash-o"
-                            @click="deleteClick(dep.tasks_id)"
+                            @click="deleteClick(dep)"
                             style="margin-left: 20px; font-size: 18px"
                           ></i>
                         </td>
@@ -257,7 +286,7 @@ export default {
     };
   },
   watch: {
-    "serachByPriceInput"() {
+    serachByPriceInput() {
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         this.filterTasksByPrice();
@@ -265,7 +294,38 @@ export default {
     },
   },
   methods: {
-    filterTasksByPrice() {
+    filterTasksByPrice() {},
+    getTasksBiggerAVG(){
+      this.statisticalByNKSLK = false;
+      axios
+        .get("http://localhost:43932/api/Tasks/GetTasksBiggerAVG")
+        .then((response) => {
+          this.tasks = response.data;
+        });
+    },
+    getTasksLessAVG(){
+      this.statisticalByNKSLK = false;
+      axios
+        .get("http://localhost:43932/api/Tasks/GetTasksLessAVG")
+        .then((response) => {
+          this.tasks = response.data;
+        });
+    },
+    getTasksMinPrice(){
+      this.statisticalByNKSLK = false;
+      axios
+        .get("http://localhost:43932/api/Tasks/GetTasksMinPrice")
+        .then((response) => {
+          this.tasks = response.data;
+        });
+    },
+    getTasksMaxPrice(){
+      this.statisticalByNKSLK = false;
+      axios
+        .get("http://localhost:43932/api/Tasks/GetTasksMaxPrice")
+        .then((response) => {
+          this.tasks = response.data;
+        });
     },
     statisticalByMinNKSLK() {
       this.statisticalByNKSLK = true;
@@ -346,7 +406,34 @@ export default {
           this.refreshData();
         });
     },
-    deleteClick(id) {},
+    deleteClick(data) {
+      if (
+        !confirm(
+          "Bạn chắc chắn muốn Công việc này?\n" +
+            "Mã:" +
+            data.tasks_id +
+            "\nTên:" +
+            data.tasks_name
+        )
+      ) {
+        return;
+      }
+      axios
+        .post("http://localhost:43932/api/Tasks/Delete", {
+          tasks_id: data.tasks_id,
+        })
+        .then((response) => {
+          if (response && response.status == 200) {
+            alert("Công việc này đã có trên NKSLK. Không thể xóa");
+          }
+          this.refreshData();
+        })
+        .catch((error) => {
+          alert("Lỗi hệ thống, không thể xóa được. Liên hệ admin.");
+          this.refreshData();
+        });
+      
+    },
   },
   mounted() {
     this.refreshData();

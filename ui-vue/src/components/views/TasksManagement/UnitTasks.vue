@@ -43,8 +43,9 @@
                     </thead>
                     <tbody>
                       <tr
-                        v-for="dep in unitTasks"
+                        v-for="(dep, index) in unitTasks"
                         :key="dep"
+                        v-show="index >= Page.FromPage && index < Page.ToPage"
                         class="even"
                         role="row"
                       >
@@ -68,6 +69,40 @@
                     </tbody>
                   </table>
                 </div>
+              </div>
+            </div>
+            <div class="paging">
+              <div class="paging-text">
+                Hiển thị
+                <span style="color: blue">{{ Page.NumberRecords }}</span> trong
+                tổng số
+                <span style="color: blue">{{ Page.TotalRecords }}</span> bản ghi
+              </div>
+              <div class="pagination">
+                <a
+                  class="fa fa-angle-double-left"
+                  :class="{ blur: IsBlurPrev }"
+                  @click="PrevPage()"
+                  style="padding-top: 11px; padding-bottom: 11px"
+                ></a>
+                <a
+                  v-for="index in Page.TotalPages"
+                  :key="index"
+                  @click="choosePage(index)"
+                  :class="{ active: index === IsActive }"
+                >
+                  {{ index }}
+                </a>
+                <a
+                  class="fa fa-angle-double-right"
+                  :class="{ blur: IsBlurNext }"
+                  @click="NextPage()"
+                  style="padding-top: 11px; padding-bottom: 11px"
+                ></a>
+              </div>
+              <div class="paging-text">
+                Tổng số trang:
+                <span style="color: blue">{{ Page.TotalPages }}</span>
               </div>
             </div>
             <!-- /.box-body -->
@@ -149,9 +184,63 @@ export default {
       unittasks_id: 0,
       unittasks_name: "",
       modalTitle: "",
+      Page: {
+        CurrentPage: 1,
+        SizePage: 5,
+        TotalPages: 0,
+        FromPage: 0,
+        ToPage: 5,
+        NumberRecords: 5,
+        TotalRecords: 0,
+      },
+      IsActive: 1,
+      IsBlurNext: false,
+      IsBlurPrev: false,
     };
   },
   methods: {
+    // Phân trang nkslk làm riêng
+    getCurrentPage(currentPage) {
+      this.Page.FromPage = (currentPage - 1) * this.Page.SizePage;
+      this.Page.ToPage = currentPage * this.Page.SizePage;
+      var modRecord = this.Page.TotalRecords % this.Page.SizePage;
+      if (this.Page.ToPage > this.Page.TotalRecords && modRecord !== 0) {
+        this.Page.NumberRecords = modRecord;
+      } else {
+        this.Page.NumberRecords = 5;
+      }
+    },
+    NextPage() {
+      this.Page.CurrentPage++;
+      if (this.Page.CurrentPage >= this.Page.TotalPages) {
+        this.Page.CurrentPage = this.Page.TotalPages;
+      }
+      if (this.Page.CurrentPage === this.Page.TotalPages) {
+        this.IsBlurNext = true;
+      }
+      this.IsBlurPrev = false;
+      this.IsActive = this.Page.CurrentPage;
+      this.getCurrentPage(this.Page.CurrentPage);
+    },
+    PrevPage() {
+      this.Page.CurrentPage--;
+      if (this.Page.CurrentPage <= 1) {
+        this.Page.CurrentPage = 1;
+      }
+      if (this.Page.CurrentPage === 1) {
+        this.IsBlurPrev = true;
+      }
+      this.IsBlurNext = false;
+      this.IsActive = this.Page.CurrentPage;
+      this.getCurrentPage(this.Page.CurrentPage);
+    },
+    choosePage(index) {
+      this.IsActive = index;
+      this.IsBlurPrev = false;
+      this.IsBlurNext = false;
+      this.Page.CurrentPage = index;
+      this.getCurrentPage(this.Page.CurrentPage);
+    },
     refreshData() {
       axios
         .get("http://localhost:43932/api/UnitTasks/GetAllUnitTasks")
@@ -160,6 +249,12 @@ export default {
             alert("Không có có dữ liệu");
           } else if (response.status == 200) {
             this.unitTasks = response.data;
+            if (this.unitTasks != null && this.unitTasks != undefined) {
+              this.Page.TotalRecords = this.unitTasks.length;
+              this.Page.TotalPages = Math.ceil(
+                this.Page.TotalRecords / this.Page.SizePage
+              );
+            }
           } else {
             alert("Lỗi kỹ thuật, liên hệ quang");
           }
@@ -198,7 +293,31 @@ export default {
         });
     },
     deleteClick(data) {
-      
+      if (
+        !confirm(
+          "Bạn chắc chắn muốn đơn vị khoán này?\n" +
+            "Mã:" +
+            data.unittasks_id +
+            "\nTên:" +
+            data.unittasks_name
+        )
+      ) {
+        return;
+      }
+      axios
+        .post("http://localhost:43932/api/UnitTasks/Delete", {
+          unittasks_id: data.unittasks_id,
+        })
+        .then((response) => {
+          if (response && response.status == 200) {
+            alert("Đơn vị khoán này đã có trên Công việc. Không thể xóa");
+          }
+          this.refreshData();
+        })
+        .catch((error) => {
+          alert("Lỗi hệ thống, không thể xóa được. Liên hệ admin.");
+          this.refreshData();
+        });
     },
   },
   mounted() {
