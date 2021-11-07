@@ -4,7 +4,13 @@
       <div class="col-md-12">
         <div class="box">
           <div class="box-header">
-            <button type="button" @click="addClick()" class="btn btn-primary" data-toggle="modal" data-target="#dialogModal">
+            <button
+              type="button"
+              @click="addClick()"
+              class="btn btn-primary"
+              data-toggle="modal"
+              data-target="#dialogModal"
+            >
               Thêm đơn vị khoán
             </button>
           </div>
@@ -30,21 +36,33 @@
                   >
                     <thead>
                       <tr role="row">
-                        <th>
-                          Mã đơn vị khoán
-                        </th>
+                        <th>Mã đơn vị khoán</th>
                         <th>Tên đơn vị khoán</th>
                         <th>Thao tác</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr
-                        v-for="dep in departments" :key="dep" class="even" role="row">
-                        <td class="sorting_1">{{ dep.ma_phongban }}</td>
-                        <td class="sorting_1">{{ dep.ten_phongban }}</td>
+                        v-for="dep in unitTasks"
+                        :key="dep"
+                        class="even"
+                        role="row"
+                      >
+                        <td class="sorting_1">{{ dep.unittasks_id }}</td>
+                        <td class="sorting_1">{{ dep.unittasks_name }}</td>
                         <td>
-                          <i class="fa fa-pencil-square-o" data-toggle="modal" data-target="#dialogModal" @click="editClick(dep)" style="font-size: 18px;"></i>
-                          <i class="fa fa-trash-o" @click="deleteClick(dep.ma_phongban)"  style="margin-left:20px;font-size: 18px;"></i>
+                          <i
+                            class="fa fa-pencil-square-o"
+                            data-toggle="modal"
+                            data-target="#dialogModal"
+                            @click="editClick(dep)"
+                            style="font-size: 18px"
+                          ></i>
+                          <i
+                            class="fa fa-trash-o"
+                            @click="deleteClick(dep)"
+                            style="margin-left: 20px; font-size: 18px"
+                          ></i>
                         </td>
                       </tr>
                     </tbody>
@@ -55,23 +73,63 @@
             <!-- /.box-body -->
           </div>
         </div>
-        <div class="modal fade" id="dialogModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div
+          class="modal fade"
+          id="dialogModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{modalTitle}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  {{ modalTitle }}
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
                 Tên đơn vị khoán
-                <input type="text" class="form-control" v-model="ten_phongban" placeholder="" style="border-radius:3px">
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="unittasks_name"
+                  placeholder=""
+                  style="border-radius: 3px"
+                />
               </div>
               <div class="modal-footer">
-                <button type="button" v-if="ma_phongban ==0"  @click="createClick()" class="btn btn-primary">Thêm mới</button>
-                <button type="button" v-if="ma_phongban !=0"  @click="updateClick()" class="btn btn-primary">Sửa</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button
+                  type="button"
+                  v-if="unittasks_id == 0"
+                  @click="createClick()"
+                  class="btn btn-primary"
+                >
+                  Thêm mới
+                </button>
+                <button
+                  type="button"
+                  v-if="unittasks_id != 0"
+                  @click="updateClick()"
+                  class="btn btn-primary"
+                >
+                  Sửa
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                >
+                  Hủy
+                </button>
               </div>
             </div>
           </div>
@@ -85,66 +143,71 @@
 /* eslint-disable */
 import axios from "axios";
 export default {
-  name: "Departments",
   data() {
     return {
-      departments: [],
-      ma_phongban: 0,
-      ten_phongban: "",
-      modalTitle:""
+      unitTasks: [],
+      unittasks_id: 0,
+      unittasks_name: "",
+      modalTitle: "",
     };
   },
   methods: {
     refreshData() {
-      axios.get("http://localhost:43932/api/phongban").then((response) => {
-        this.departments = response.data;
-      });
+      axios
+        .get("http://localhost:43932/api/UnitTasks/GetAllUnitTasks")
+        .then((response) => {
+          if (response.status == 204) {
+            alert("Không có có dữ liệu");
+          } else if (response.status == 200) {
+            this.unitTasks = response.data;
+          } else {
+            alert("Lỗi kỹ thuật, liên hệ quang");
+          }
+        })
+        .catch(function (error) {
+          alert("Lỗi kỹ thuật, liên hệ quang");
+        });
     },
-    addClick(){
-            this.modalTitle="Thêm phòng ban";
-            this.ma_phongban=0;
-            this.ten_phongban="";
-        },
-    editClick(dep){
-            this.modalTitle="Sửa phòng ban";
-            this.ma_phongban=dep.ma_phongban;
-            this.ten_phongban=dep.ten_phongban;
-        },
+    addClick() {
+      this.modalTitle = "Thêm đơn vị khoán";
+      this.unittasks_id = 0;
+      this.unittasks_name = "";
+    },
+    editClick(dep) {
+      this.modalTitle = "Sửa đơn vị khoán";
+      this.unittasks_id = dep.unittasks_id;
+      this.unittasks_name = dep.unittasks_name;
+    },
     createClick() {
       axios
-        .post("http://localhost:43932/api/phongban", {
-          ten_phongban: this.ten_phongban,
+        .post("http://localhost:43932/api/UnitTasks/Insert", {
+          unittasks_name: this.unittasks_name,
         })
         .then((response) => {
           this.refreshData();
-          alert(response.data);
         });
     },
-    updateClick(){
-            axios.put("http://localhost:43932/api/phongban",{
-                ma_phongban:this.ma_phongban,
-                ten_phongban:this.ten_phongban
-            })
-            .then((response)=>{
-                this.refreshData();
-                alert(response.data);
-            });
+    updateClick() {
+      axios
+        .put("http://localhost:43932/api/UnitTasks", {
+          unittasks_id: this.unittasks_id,
+          unittasks_name: this.unittasks_name,
+        })
+        .then((response) => {
+          this.refreshData();
+        });
     },
-    deleteClick(id){
-            if(!confirm("Bạn chắc chắn muốn xóa phòng ban này?")){
-                return;
-            }
-            axios.delete("http://localhost:43932/api/phongban/"+id)
-            .then((response)=>{
-                this.refreshData();
-                alert(response.data);
-            })
-            .catch(error => {
-                console.log(error)
-                alert("Phòng ban này còn công nhân hoạt động. Không được xóa !");
-                this.errored = true
-              });
-    
+    deleteClick(data) {
+      if (!confirm("Bạn chắc chắn muốn xóa phòng ban này?")) {
+        return;
+      }
+      axios
+        .post("http://localhost:43932/api/UnitTasks/Delete", {
+          unittasks_id: data.unittasks_id,
+        })
+        .then((response) => {
+          this.refreshData();
+        });
     },
   },
   mounted() {
