@@ -70,7 +70,7 @@
         <router-link tag="li" class="pageLink" to="/checkin">
           <a>
             <i class="fa fa-calculator"></i>
-            <span class="page">Bảng chấm công</span>
+            <span class="page">Bảng công</span>
           </a>
         </router-link>
         <router-link tag="li" class="pageLink" to="/salary">

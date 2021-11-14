@@ -4,6 +4,8 @@ import 'es6-promise/auto'
 // Import System requirements
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import excel from 'vue-excel-export'
+import Tabs from 'vue-material-tabs'
 
 import { sync } from 'vuex-router-sync'
 import routes from './routes'
@@ -22,6 +24,8 @@ Vue.filter('prettyDate', prettyDate)
 Vue.filter('pluralize', pluralize)
 
 Vue.use(VueRouter)
+Vue.use(excel)
+Vue.use(Tabs)
 
 // Routing logic
 var router = new VueRouter({

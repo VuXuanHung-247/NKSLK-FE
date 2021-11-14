@@ -6,13 +6,28 @@
           <div class="col-md-12 box-header" style="display: flex; justify-content: flex-start;">
             <div class="nkslk-tabs" @click="chooseReportBySelf()" >Nhật ký sản lượng khoán làm riêng</div>
             <div class="nkslk-tabs" @click="chooseReportByTogether()" >Nhật ký sản lượng khoán làm chung</div>
-            <!-- <button type="button" @click="addClick()" class="btn btn-primary" data-toggle="modal" data-target="#dialogModal">
-              Thêm phòng ban
-            </button> -->
+            <div class="nkslk-tabs" @click="chooseReportByLate()" >Nhật ký sản lượng khoán làm muộn</div>
           </div>
           <!-- Nhật ký sản lượng khoán làm riêng -->
-          <div class="box-body" v-if="IsShowBySelf">
+          <div class="box-body" v-if="IsShowReportBySelf">
             <div class="dataTables_wrapper form-inline dt-bootstrap" id="example1_wrapper">
+              <div class="row">
+                <div class="form-group" style="padding: 15px;"><b> Tìm kiếm theo: </b></div>
+                <div class="form-group" style="margin-right: 10px;">
+                  <p>Tên công nhân:</p>
+                  <input type="text" class="form-control" v-model="EmployeeNameFilter" v-on:keyup="FilterFn()" placeholder="Nhập Tên công nhân" style="border-radius:3px">
+                </div>
+                <div class="form-group">
+                  <p>Ngày bắt đầu:</p>
+                  <input type="date" class="form-control" v-model="StartDateFilter" v-on:keyup="FilterFn()"  style="border-radius:3px">
+                </div>
+                <div class="form-group" style="margin-right: 38px;float: right;">
+                  <export-excel :data="reportsBySelf" :fields="excelFields" :name="excelName" style="display: flex; justify-content: space-between; margin-top: 15px; color: green; border: 1px solid; border-radius: 4px; padding: 8px 10px 0px 6px;">
+                    <i class="fa fa-file-excel-o" style="margin-right: 10px;"></i>
+                    <p style="line-height: 15px; font-size: 16px">Xuất file</p>
+                  </export-excel>
+                </div>
+              </div>
               <div class="row">
                 <div class="col-sm-12 table-responsive">
                   <table class="table table-bordered table-striped dataTable">
@@ -28,7 +43,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(reportSelf, index) in reportsBySelf" :key="reportSelf.ma_nkslk" 
+                      <tr v-for="(reportSelf, index) in reportsBySelf" :key="'self' + index" 
                           v-show="index >= Page.FromPage && index < Page.ToPage" class="even" role="row" >
                         <td class="sorting_1">{{ reportSelf.ma_nkslk }}</td>
                         <td class="sorting_1">{{ reportSelf.ma_congnhan }}</td>
@@ -37,8 +52,8 @@
                         <td class="sorting_1">{{ reportSelf.thoigian_batdau | formatDate}}</td>
                         <td class="sorting_1">{{ reportSelf.thoigian_ketthuc | formatDate}}</td>
                         <td>
-                          <i class="fa fa-pencil-square-o" data-toggle="modal" data-target="#dialogModal" @click="editClick(dep)" style="font-size: 18px;"></i> 
-                          <i class="fa fa-trash-o" @click="deleteClick(dep.ma_phongban)"  style="margin-left:20px;font-size: 18px;"></i>
+                          <i class="fa fa-pencil-square-o" data-toggle="modal" data-target="#dialogModal" @click="editClick(reportSelf)" style="font-size: 18px;"></i> 
+                          <i class="fa fa-trash-o" @click="deleteClick()"  style="opacity: 0.6;margin-left:20px;font-size: 18px;"></i>
                         </td>
                       </tr>
                     </tbody>
@@ -61,7 +76,7 @@
             </div>
           </div>
           <!-- Nhật ký sản lượng khoán làm chung -->
-          <div class="box-body" v-if="!IsShowBySelf">
+          <div class="box-body" v-if="IsShowReportByTogether">
             <div class="dataTables_wrapper form-inline dt-bootstrap" id="example1_wrapper">
               <div class="row">
                 <div class="col-sm-12 table-responsive">
@@ -79,7 +94,7 @@
                     </thead>
                     <tbody>
                       <tr
-                        v-for="(reportTogetther,index) in reportsByTogether" :key="reportTogetther.ma_nkslk"
+                        v-for="(reportTogetther,index) in reportsByTogether" :key="'together '+index"
                         v-show="index >= PageOfTogether.FromPage && index < PageOfTogether.ToPage" class="even" role="row">
                         <td>{{ reportTogetther.ma_nkslk }}</td>
                         <td>{{ reportTogetther.ma_congnhan }}</td>
@@ -112,27 +127,102 @@
             </div>
             <!-- /.box-body -->
           </div>
+          <!-- Nhật ký sản lượng khoán làm muộn -->
+          <div class="box-body" v-if="IsShowReportByLate">
+            <div class="dataTables_wrapper form-inline dt-bootstrap" id="example1_wrapper">
+              <div class="row">
+                <div class="col-sm-12 table-responsive">
+                  <table class="table table-bordered table-striped dataTable">
+                    <thead>
+                      <tr role="row">
+                        <th>Mã NKSLK</th>
+                        <th>Mã công nhân </th>
+                        <th>Tên công nhân </th>
+                        <th>Thời gian bắt đầu ca làm việc </th>
+                        <th>Thời gian bắt đầu thực tế </th>
+                        <th>Thời gian kết thúc ca làm việc </th>
+                        <th>Số phút muộn</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(reportByLate,index) in reportsByLate" :key="'late - ' + index"
+                        v-show="index >= PageOfLate.FromPage && index < PageOfLate.ToPage" class="even" role="row">
+                        <td>{{ reportByLate.ma_nkslk }}</td>
+                        <td>{{ reportByLate.ma_congnhan }}</td>
+                        <td>{{ reportByLate.hoten }}</td>
+                        <td>{{ reportByLate.thoigian_batdau | formatDate}}</td>
+                        <td>{{ reportByLate.thoigian_batdau1 | formatDate}}</td>
+                        <td>{{ reportByLate.thoigian_ketthuc | formatDate}}</td>
+                        <td>{{ reportByLate.sophutdimuon}}</td>
+                        <td>
+                          <i class="fa fa-pencil-square-o" data-toggle="modal" data-target="#dialogModal" @click="editClick(dep)" style="font-size: 18px;"></i> 
+                          <i class="fa fa-trash-o" @click="deleteClick(dep.ma_phongban)"  style="margin-left:20px;font-size: 18px;"></i>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="paging">
+              <div class="paging-text">Hiển thị <span style="color:blue">{{PageOfLate.NumberRecords}}</span> trong tổng số <span style="color:blue">{{PageOfLate.TotalRecords}}</span> bản ghi</div>
+              <div class="pagination">
+                <a class="fa fa-angle-double-left" :class="{'blur':IsBlurPrev}" @click="PrevPageOfLate()" style="padding-top: 11px; padding-bottom: 11px;"></a>
+                <a v-for="index in PageOfLate.TotalPages" :key="index" 
+                  @click="choosePageOfLate(index)"
+                  :class="{active: index === IsActive}">
+                  {{index}}
+                </a>
+                <a class="fa fa-angle-double-right" :class="{'blur':IsBlurNext}" @click="NextPageOfLate()" style="padding-top: 11px; padding-bottom: 11px;"></a>
+              </div>
+              <div class="paging-text">Tổng số trang: <span style="color:blue">{{PageOfLate.TotalPages}}</span></div>
+            </div>
+          </div>
         </div>
         
-        
-
         <!-- Modal -->
         <div class="modal fade" id="dialogModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
-              <div class="modal-header">
-                <!-- <h5 class="modal-title" id="exampleModalLabel">{{modalTitle}}</h5> -->
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+              <div class="modal-header-flex" style="padding: 10px;">
+                <label class="modal-title" id="exampleModalLabel" style="font-size:16px">{{modalTitle}}</label>
+                 <i class="fa fa-times" data-dismiss="modal" aria-hidden="true" style="font-size:24px; color: rgb(141 136 136);"></i>
               </div>
-              <div class="modal-body">
-                Tên phòng ban:
-                <!-- <input type="text" class="form-control" v-model="ten_phongban" placeholder="" style="border-radius:3px"> -->
+              <div class="modal-body" style="height: 250px;">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <p>Mã NKSLK:</p>
+                    <input type="text" class="form-control" v-model="nkslkId" placeholder="" disabled style="border-radius:3px">
+                  </div>
+                  <div class="form-group">
+                    <p>Tên công nhân:</p>
+                    <input type="text" class="form-control" v-model="EmployeeName" style="border-radius:3px">
+                  </div>
+                  <div class="form-group">
+                    <p>Thời gian bắt đầu ca làm việc</p>
+                    <input type="datetime-local" class="form-control" v-model="StartTime" style="border-radius:3px">
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <p>Mã công nhân:</p>
+                    <input type="text" class="form-control" v-model="EmployeeId" style="border-radius:3px">
+                  </div>
+                  <div class="form-group">
+                    <p>Ngày bắt đầu</p>
+                    <input type="datetime-local" class="form-control" v-model="StartDate" style="border-radius:3px">
+                  </div>
+                  <div class="form-group">
+                    <p>Thời gian kết thúc ca làm việc</p>
+                    <input type="datetime-local" class="form-control" v-model="EndTime" style="border-radius:3px">
+                  </div>
+                </div>
               </div>
               <div class="modal-footer">
-                <!-- <button type="button" v-if="ma_phongban ==0"  @click="createClick()" class="btn btn-primary">Thêm mới</button>
-                <button type="button" v-if="ma_phongban !=0"  @click="updateClick()" class="btn btn-primary">Sửa</button> -->
+                <!-- <button type="button" v-if="ma_phongban ==0"  @click="createClick()" class="btn btn-primary">Thêm mới</button> -->
+                <button type="button" v-if="nkslkId !=0"  @click="updateClick()" class="btn btn-primary">Lưu</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
               </div>
             </div>
@@ -152,24 +242,43 @@ export default {
     return {
       reportsBySelf: [],
       reportsByTogether: [],
+      reportsByLate:[],
+      EmployeeNameFilter:"",
+      StartDateFilter:"",
       nkslkId: 0,
       EmployeeId: 0,
       EmployeeName:"",
       StartDate:"",
       StartTime:"",
       EndTime:"",
-      IsShowBySelf: true,
+      IsShowReportBySelf: true,
+      IsShowReportByTogether: false,
+      IsShowReportByLate: false,
       Page:{CurrentPage:1, SizePage:5, TotalPages:0, FromPage:0, ToPage:5, NumberRecords:5, TotalRecords:0},
       PageOfTogether:{CurrentPage:1, SizePage:5, TotalPages:0, FromPage:0, ToPage:5, NumberRecords:5, TotalRecords:0},
+      PageOfLate:{CurrentPage:1, SizePage:5, TotalPages:0, FromPage:0, ToPage:5, NumberRecords:5, TotalRecords:0},
       IsActive:1,
       IsBlurNext:false,
-      IsBlurPrev:false
+      IsBlurPrev:false,
+      reportsBySelfFilter:[],
+      excelName:"Nhật ký sản lượng khoán làm riêng",
+      excelFields:{
+        "Mã nkslk":'ma_nkslk',
+        "Mã công nhân":'ma_congnhan',
+        "Tên công nhân":'hoten',
+        "Ngày bắt đầu":'ngaybatdau',
+        "Thời gian bắt đầu ca làm việc":'thoigian_batdau',
+        "Thời gian kết thúc ca làm việc":'thoigian_ketthuc'
+      },
+      modalTitle:"",
+      urlAPI: "http://localhost:43932/api/report/"
     };
   },
   methods: {
     getReportBySelf() {
-      axios.get("http://localhost:43932/api/report/ReportBySelf").then((response) => {
+      axios.get(this.urlAPI + "ReportBySelf").then((response) => {
         this.reportsBySelf = response.data;
+        this.reportsBySelfFilter = response.data;
         // console.log("reports:",this.reportsBySelf);
         if (this.reportsBySelf != null && this.reportsBySelf != undefined) {
           this.Page.TotalRecords = this.reportsBySelf.length;
@@ -177,25 +286,46 @@ export default {
         }
       });
     },
+    FilterFn(){
+      var EmployeeNameFilter=this.EmployeeNameFilter;
+      var StartDateFilter=this.StartDateFilter;
+
+        this.reportsBySelf=this.reportsBySelfFilter.filter(
+            function(el){
+                return el.hoten.toString().toLowerCase().includes(
+                    EmployeeNameFilter.toString().trim().toLowerCase()
+                )&&
+                el.ngaybatdau.toString().toLowerCase().includes(
+                    StartDateFilter.toString().trim().toLowerCase()
+                )
+            });
+    },
     getReportByTogether() {
-      axios.get("http://localhost:43932/api/report/ReportByTogether").then((response) => {
+      axios.get(this.urlAPI + "ReportByTogether").then((response) => {
         this.reportsByTogether = response.data;
         if (this.reportsByTogether != null && this.reportsByTogether != undefined) {
           this.PageOfTogether.TotalRecords = this.reportsByTogether.length;
           this.PageOfTogether.TotalPages = Math.ceil(this.PageOfTogether.TotalRecords/this.PageOfTogether.SizePage);
-          var a = this.PageOfTogether.TotalPages;
         }
       });
     },
-    addClick(){
-            this.modalTitle="Thêm phòng ban";
-            this.ma_phongban=0;
-            this.ten_phongban="";
-        },
-    editClick(dep){
-            this.modalTitle="Sửa phòng ban";
-            this.ma_phongban=dep.ma_phongban;
-            this.ten_phongban=dep.ten_phongban;
+    getReportByLate() {
+      axios.get(this.urlAPI + "ReportByLate").then((response) => {
+        this.reportsByLate = response.data;
+        if (this.reportsByLate != null && this.reportsByLate != undefined) {
+          this.PageOfLate.TotalRecords = this.reportsByLate.length;
+          this.PageOfLate.TotalPages = Math.ceil(this.PageOfLate.TotalRecords/this.PageOfLate.SizePage);
+        }
+      });
+    },
+    editClick(reportSelf){
+            this.modalTitle="Cập nhật nhật ký sản lượng khoán";
+            this.nkslkId=reportSelf.ma_nkslk;
+            this.EmployeeId=reportSelf.ma_congnhan;
+            this.EmployeeName=reportSelf.hoten;
+            this.StartDate=reportSelf.ngaybatdau;
+            this.StartTime=reportSelf.thoigian_batdau;
+            this.EndTime=reportSelf.thoigian_ketthuc;
         },
     createClick() {
       axios
@@ -217,28 +347,36 @@ export default {
                 alert(response.data);
             });
     },
-    deleteClick(id){
-            if(!confirm("Bạn chắc chắn muốn xóa phòng ban này?")){
-                return;
-            }
-            axios.delete("http://localhost:43932/api/phongban/"+id)
-            .then((response)=>{
-                this.refreshData();
-                alert(response.data);
-            })
-            .catch(error => {
-                console.log(error)
-                alert("Phòng ban này còn công nhân hoạt động. Không được xóa !");
-                this.errored = true
-            });
-    
+    deleteClick(){
+      alert("Bạn không có quyền xóa NKSLK. Vui lòng liên hệ cấp trên !");
+            // if(!confirm("Bạn chắc chắn muốn xóa phòng ban này?")){
+            //     return;
+            // }
+            // axios.delete("http://localhost:43932/api/phongban/"+id)
+            // .then((response)=>{
+            //     this.refreshData();
+            //     alert(response.data);
+            // })
+            // .catch(error => {
+            //     console.log(error)
+            //     alert("Phòng ban này còn công nhân hoạt động. Không được xóa !");
+            //     this.errored = true
+            // });
     },
     chooseReportBySelf(){
-      this.IsShowBySelf =true;
+      this.IsShowReportBySelf = true;
+      this.IsShowReportByTogether = false;
+      this.IsShowReportByLate = false;
     },
     chooseReportByTogether(){
-      this.IsShowBySelf =false;
-      this.getReportByTogether();
+      this.IsShowReportByTogether = true;
+      this.IsShowReportBySelf = false;
+      this.IsShowReportByLate = false;
+    },
+    chooseReportByLate(){
+      this.IsShowReportByLate = true;
+      this.IsShowReportBySelf = false;
+      this.IsShowReportByTogether = false;
     },
 
     // Phân trang nkslk làm riêng
@@ -326,7 +464,50 @@ export default {
       this.IsBlurNext = false;
       this.PageOfTogether.CurrentPage = index;
       this.getCurrentPageOfTogether(this.PageOfTogether.CurrentPage);
-    }
+    },
+    // Phân trang nkslk làm muộn
+    getCurrentPageOfLate(currentPage){
+      this.PageOfLate.FromPage = (currentPage- 1) *  this.PageOfLate.SizePage;
+      this.PageOfLate.ToPage = currentPage * this.PageOfLate.SizePage;
+      var modRecord = this.PageOfLate.TotalRecords % this.PageOfLate.SizePage;
+      if(this.PageOfLate.ToPage > this.PageOfLate.TotalRecords && modRecord !== 0){
+        this.PageOfLate.NumberRecords = modRecord;
+      }
+      else{
+        this.PageOfLate.NumberRecords = 5;
+      }
+    },
+    NextPageOfLate(){
+      this.PageOfLate.CurrentPage ++;
+      if(this.PageOfLate.CurrentPage >= this.PageOfLate.TotalPages){
+        this.PageOfLate.CurrentPage = this.PageOfLate.TotalPages;
+      }
+      if(this.PageOfLate.CurrentPage === this.PageOfLate.TotalPages){
+        this.IsBlurNext = true;
+      }
+      this.IsBlurPrev = false;
+      this.IsActive = this.PageOfLate.CurrentPage;
+      this.getCurrentPageOfLate(this.PageOfLate.CurrentPage);
+    },
+    PrevPageOfLate(){
+      this.PageOfLate.CurrentPage --;
+      if(this.PageOfLate.CurrentPage <= 1){
+        this.PageOfLate.CurrentPage = 1;
+      }
+      if(this.PageOfLate.CurrentPage === 1){
+        this.IsBlurPrev = true;
+      }
+      this.IsBlurNext = false;
+      this.IsActive = this.PageOfLate.CurrentPage;
+       this.getCurrentPageOfLate(this.PageOfLate.CurrentPage);
+    },
+    choosePageOfLate(index){
+      this.IsActive = index;
+      this.IsBlurPrev = false;
+      this.IsBlurNext = false;
+      this.PageOfLate.CurrentPage = index;
+      this.getCurrentPageOfLate(this.PageOfLate.CurrentPage);
+    },
   },
   filters: {
     formatDate: function (value) {
@@ -337,6 +518,8 @@ export default {
   },
   mounted() {
     this.getReportBySelf();
+    this.getReportByTogether();
+    this.getReportByLate();
   },
 };
 </script>
@@ -351,7 +534,8 @@ export default {
   font-size: 16px;
 }
 .nkslk-tabs:hover{
-  background-color: #ecf0f5;
+  background-color: #3c8dbc;
+  color:#fff;
 }
 /* Using the bootstrap style, but overriding the font to not draw in
    the Glyphicons Halflings font as an additional requirement for sorting icons.
@@ -409,5 +593,10 @@ table.dataTable thead .sorting_desc:after {
 .pagination a:hover:not(.active) {background-color: #ddd;}
 .blur{
   opacity: 0.4;
+}
+.modal-header-flex{
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
 }
 </style>

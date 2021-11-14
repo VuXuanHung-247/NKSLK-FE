@@ -69,7 +69,7 @@ const routes = [
       }, {
         path: 'checkin',
         component: CheckinView,
-        name: 'Bảng chấm công'
+        name: 'Bảng công'
         // meta: {description: 'Danh sách Sản phẩm'}
       }, {
         path: 'salary',
