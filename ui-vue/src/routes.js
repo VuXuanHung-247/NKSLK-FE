@@ -3,6 +3,7 @@ import LoginView from './components/Login.vue'
 import NotFoundView from './components/404.vue'
 
 // Import Views - Dash
+/* eslint-disable */
 import DashboardView from './components/views/Dashboard.vue'
 import ProductsView from './components/views/Products.vue'
 import EmployeesView from './components/views/Employees/Employees.vue'
@@ -12,10 +13,13 @@ import DailyReportsView from './components/views/Reports/DailyReports.vue'
 import CheckinView from './components/views/Reports/Checkin.vue'
 import SalaryView from './components/views/Reports/Salary.vue'
 import TablesView from './components/views/Tables.vue'
-import TasksView from './components/views/Tasks.vue'
+import TasksView from './components/views/TasksManagement/Tasks.vue'
 import SettingView from './components/views/Setting.vue'
+import UnitTasksView from './components/views/TasksManagement/UnitTasks.vue'
+import DailyWorkView from './components/views/DailyWork.vue'
 
 // Routes
+/* eslint-disable */
 const routes = [
   {
     path: '/login',
@@ -26,6 +30,10 @@ const routes = [
     component: DashView,
     children: [
       {
+        path: 'dailywork',
+        component: DailyWorkView,
+        name: 'Nhật ký sản lượng khoán',
+      },{
         path: 'dashboard',
         alias: '',
         component: DashboardView,
@@ -40,6 +48,11 @@ const routes = [
         path: 'tasks',
         component: TasksView,
         name: 'Quản lý Công việc'
+        // meta: {description: 'Danh sách Công việc'}
+      },{
+        path: 'unittasks',
+        component: UnitTasksView,
+        name: 'Đơn vị khoán'
         // meta: {description: 'Danh sách Công việc'}
       }, {
         path: 'products',
