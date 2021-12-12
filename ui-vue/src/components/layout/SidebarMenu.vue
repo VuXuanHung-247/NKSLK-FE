@@ -93,13 +93,13 @@
         <router-link tag="li" class="pageLink" to="/checkin">
           <a>
             <i class="fa fa-calculator"></i>
-            <span class="page">Bảng công</span>
+            <span class="page">Công nhân</span>
           </a>
         </router-link>
-        <router-link tag="li" class="pageLink" to="/salary">
+        <router-link tag="li" class="pageLink" to="/report-product">
           <a>
             <i class="fa fa-money"></i>
-            <span class="page">Bảng lương</span>
+            <span class="page">Sản phẩm</span>
           </a>
         </router-link>
       </ul>

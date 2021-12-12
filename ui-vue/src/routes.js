@@ -82,12 +82,12 @@ const routes = [
       }, {
         path: 'checkin',
         component: CheckinView,
-        name: 'Bảng công'
+        name: 'Công nhân'
         // meta: {description: 'Danh sách Sản phẩm'}
       }, {
-        path: 'salary',
+        path: 'report-product',
         component: SalaryView,
-        name: 'Bảng lương'
+        name: 'Sản phẩm'
         // meta: {description: 'Danh sách Sản phẩm'}
       }, {
         path: 'setting',

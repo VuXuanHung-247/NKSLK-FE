@@ -4,10 +4,21 @@
       <div class="col-md-12">
         <div class="box">
           <div class="box-header">
-            <h3 class="box-title">Tổng số ngày làm việc của công nhân </h3>
-            <!-- <button type="button" @click="addClick()" class="btn btn-primary" data-toggle="modal" data-target="#dialogModal">
-              Thêm phòng ban
-            </button> -->
+            <button type="button" class="btn btn-primary">
+              DS công nhân làm ca 3
+            </button>
+            <button type="button" class="btn btn-primary">
+              DS công nhân chuẩn bị về hưu
+            </button>
+            <button type="button" class="btn btn-primary">
+              DS công nhân có số giờ làm việc vượt chuẩn
+            </button>
+            <button type="button" class="btn btn-primary">
+              Tổng số ngày công trong tháng
+            </button>
+            <button type="button" class="btn btn-primary">
+              Bảng lương
+            </button>
           </div>
           <!-- /.box-header -->
           <div class="box-body">

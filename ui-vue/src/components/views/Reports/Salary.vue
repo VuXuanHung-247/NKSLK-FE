@@ -4,7 +4,10 @@
       <div class="col-md-12">
         <div class="box">
           <div class="box-header">
-            <h3 class="box-title">Danh sách Nhật ký sản lượng khoán làm riêng</h3>
+            <!-- <h3 class="box-title">Danh sách Nhật ký sản lượng khoán làm riêng</h3> -->
+            <button type="button" class="btn btn-primary" @click="getExpiredProducts()">
+            Sản phẩm hết hạn
+            </button>
             <!-- <button type="button" @click="addClick()" class="btn btn-primary" data-toggle="modal" data-target="#dialogModal">
               Thêm phòng ban
             </button> -->
@@ -23,24 +26,24 @@
                   <table class="table table-bordered table-striped dataTable">
                     <thead>
                       <tr role="row">
-                        <th>Mã NKSLK</th>
-                        <th>Mã công nhân </th>
-                        <th>Tên công nhân </th>
-                        <th>Ngày bắt đầu </th>
-                        <th>Thời gian bắt đầu ca làm việc </th>
-                        <th>Thời gian kết thúc ca làm việc </th>
+                        <th>Mã sản phẩm</th>
+                        <th>Tên sản phẩm </th>
+                        <th>Số đăng ký </th>
+                        <th>Hạn sử dụng</th>
+                        <th>Quy cách </th>
+                        <th>Ngày đăng ký </th>
                         <th>Thao tác</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr
                         v-for="report in reports" :key="report" class="even" role="row">
-                        <td class="sorting_1">{{ report.ma_nkslk }}</td>
-                        <td class="sorting_1">{{ report.ma_congnhan }}</td>
-                        <td class="sorting_1">{{ report.hoten }}</td>
-                        <td class="sorting_1">{{ report.ngaybatdau }}</td>
-                        <td class="sorting_1">{{ report.thoigian_batdau }}</td>
-                        <td class="sorting_1">{{ report.thoigian_ketthuc }}</td>
+                        <td class="sorting_1">{{ report.ma_sanpham }}</td>
+                        <td class="sorting_1">{{ report.tensanpham }}</td>
+                        <td class="sorting_1">{{ report.sodangky }}</td>
+                        <td class="sorting_1">{{ report.hansudung }}</td>
+                        <td class="sorting_1">{{ report.quycach }}</td>
+                        <td class="sorting_1">{{ report.ngaydangky }}</td>
                         <td>
                           <i class="fa fa-pencil-square-o" data-toggle="modal" data-target="#dialogModal" @click="editClick(dep)" style="font-size: 18px;"></i> 
                           <i class="fa fa-trash-o" @click="deleteClick(dep.ma_phongban)"  style="margin-left:20px;font-size: 18px;"></i>
@@ -93,12 +96,13 @@ export default {
       employeeName:"",
       startDate:"",
       startTime:"",
-      endTime:""
+      endTime:"",
+      urlAPI: "http://localhost:43932/api/report/"
     };
   },
   methods: {
-    refreshData() {
-      axios.get("http://localhost:43932/api/report").then((response) => {
+    getExpiredProducts() {
+      axios.get(this.urlAPI + "GetExpiredProducts").then((response) => {
         this.reports = response.data;
       });
     },
@@ -150,7 +154,7 @@ export default {
     },
   },
   mounted() {
-    this.refreshData();
+    this.getExpiredProducts();
   },
 };
 </script>

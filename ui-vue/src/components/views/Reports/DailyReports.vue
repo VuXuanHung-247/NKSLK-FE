@@ -3,16 +3,10 @@
     <div class="row center-block">
       <div class="col-md-12">
         <div class="box">
-          <div class="col-md-12 box-header" style="display: flex; justify-content: flex-start;">
-            <div class="nkslk-tabs" @click="chooseReportBySelf()" >Nhật ký sản lượng khoán làm riêng</div>
-            <div class="nkslk-tabs" @click="chooseReportByTogether()" >Nhật ký sản lượng khoán làm chung</div>
-            <div class="nkslk-tabs" @click="chooseReportByLate()" >Nhật ký sản lượng khoán làm muộn</div>
-          </div>
-          <!-- Nhật ký sản lượng khoán làm riêng -->
-          <div class="box-body" v-if="IsShowReportBySelf">
+          <lable class="col-lg-12 report-header" >Nhật ký sản lượng khoán làm riêng</lable>
+          <div class="box-body">
             <div class="dataTables_wrapper form-inline dt-bootstrap" id="example1_wrapper">
-              <div class="row">
-                <div class="form-group" style="padding: 15px;"><b> Tìm kiếm theo: </b></div>
+              <div class="row" style="margin-left:0px">
                 <div class="form-group" style="margin-right: 10px;">
                   <p>Tên công nhân:</p>
                   <input type="text" class="form-control" v-model="EmployeeNameFilter" v-on:keyup="FilterFn()" placeholder="Nhập Tên công nhân" style="border-radius:3px">
@@ -37,8 +31,8 @@
                         <th>Mã công nhân </th>
                         <th>Tên công nhân </th>
                         <th>Ngày bắt đầu </th>
-                        <th>Thời gian bắt đầu ca làm việc </th>
-                        <th>Thời gian kết thúc ca làm việc </th>
+                        <th>Thời gian bắt đầu thực tế </th>
+                        <th>Thời gian kết thúc thực tế </th>
                         <th>Thao tác</th>
                       </tr>
                     </thead>
@@ -75,8 +69,10 @@
               <div class="paging-text">Tổng số trang: <span style="color:blue">{{Page.TotalPages}}</span></div>
             </div>
           </div>
-          <!-- Nhật ký sản lượng khoán làm chung -->
-          <div class="box-body" v-if="IsShowReportByTogether">
+        </div>
+        <div class="box">
+          <lable class="col-lg-12 report-header" >Nhật ký sản lượng khoán làm chung</lable>
+          <div class="box-body">
             <div class="dataTables_wrapper form-inline dt-bootstrap" id="example1_wrapper">
               <div class="row">
                 <div class="col-sm-12 table-responsive">
@@ -87,8 +83,8 @@
                         <th>Mã công nhân </th>
                         <th>Tên công nhân </th>
                         <th>Ngày bắt đầu </th>
-                        <th>Thời gian bắt đầu ca làm việc </th>
-                        <th>Thời gian kết thúc ca làm việc </th>
+                        <th>Thời gian bắt đầu thực tế </th>
+                        <th>Thời gian kết thúc thực tế </th>
                         <th>Thao tác</th>
                       </tr>
                     </thead>
@@ -127,8 +123,10 @@
             </div>
             <!-- /.box-body -->
           </div>
-          <!-- Nhật ký sản lượng khoán làm muộn -->
-          <div class="box-body" v-if="IsShowReportByLate">
+        </div>
+        <div class="box">
+          <lable class="col-lg-12 report-header" >Nhật ký sản lượng khoán làm muộn</lable>
+          <div class="box-body">
             <div class="dataTables_wrapper form-inline dt-bootstrap" id="example1_wrapper">
               <div class="row">
                 <div class="col-sm-12 table-responsive">
@@ -181,7 +179,6 @@
             </div>
           </div>
         </div>
-        
         <!-- Modal -->
         <div class="modal fade" id="dialogModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -200,8 +197,9 @@
                     <p>Tên công nhân:</p>
                     <input type="text" class="form-control" v-model="EmployeeName" style="border-radius:3px">
                   </div>
+                  
                   <div class="form-group">
-                    <p>Thời gian bắt đầu ca làm việc</p>
+                    <p>Thời gian bắt đầu ca thực tế</p>
                     <input type="datetime-local" class="form-control" v-model="StartTime" style="border-radius:3px">
                   </div>
                 </div>
@@ -214,15 +212,16 @@
                     <p>Ngày bắt đầu</p>
                     <input type="datetime-local" class="form-control" v-model="StartDate" style="border-radius:3px">
                   </div>
+                  
                   <div class="form-group">
-                    <p>Thời gian kết thúc ca làm việc</p>
+                    <p>Thời gian kết thúc ca thực tế</p>
                     <input type="datetime-local" class="form-control" v-model="EndTime" style="border-radius:3px">
                   </div>
                 </div>
               </div>
               <div class="modal-footer">
                 <!-- <button type="button" v-if="ma_phongban ==0"  @click="createClick()" class="btn btn-primary">Thêm mới</button> -->
-                <button type="button" v-if="nkslkId !=0"  @click="updateClick()" class="btn btn-primary">Lưu</button>
+                <button type="button" v-if="nkslkId !=0"  @click="updateReportSelf()" class="btn btn-primary">Lưu</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
               </div>
             </div>
@@ -271,7 +270,8 @@ export default {
         "Thời gian kết thúc ca làm việc":'thoigian_ketthuc'
       },
       modalTitle:"",
-      urlAPI: "http://localhost:43932/api/report/"
+      urlAPI: "http://localhost:43932/api/report/",
+      IsShowModal:false,
     };
   },
   methods: {
@@ -319,6 +319,7 @@ export default {
       });
     },
     editClick(reportSelf){
+            this.IsShowModal = true;
             this.modalTitle="Cập nhật nhật ký sản lượng khoán";
             this.nkslkId=reportSelf.ma_nkslk;
             this.EmployeeId=reportSelf.ma_congnhan;
@@ -337,14 +338,19 @@ export default {
           alert(response.data);
         });
     },
-    updateClick(){
-            axios.put("http://localhost:43932/api/phongban",{
-                ma_phongban:this.ma_phongban,
-                ten_phongban:this.ten_phongban
+    updateReportSelf(){
+            axios.put(this.urlAPI + "UpdateReportSelf",{
+                ma_nkslk:this.nkslkId,
+                ma_congnhan:this.EmployeeId,
+                hoten:this.EmployeeName,
+                ngaybatdau:this.StartDate,
+                thoigian_batdau:this.StartTime,
+                thoigian_ketthuc:this.EndTime
             })
             .then((response)=>{
-                this.refreshData();
+              this.IsShowModal = false;
                 alert(response.data);
+                this.getReportBySelf();
             });
     },
     deleteClick(){
@@ -508,6 +514,11 @@ export default {
       this.PageOfLate.CurrentPage = index;
       this.getCurrentPageOfLate(this.PageOfLate.CurrentPage);
     },
+    loadData(){
+    this.getReportBySelf();
+    this.getReportByTogether();
+    this.getReportByLate();
+    }
   },
   filters: {
     formatDate: function (value) {
@@ -516,10 +527,8 @@ export default {
       }
     },
   },
-  mounted() {
-    this.getReportBySelf();
-    this.getReportByTogether();
-    this.getReportByLate();
+  created() {
+    this.loadData();
   },
 };
 </script>
@@ -565,7 +574,19 @@ table.dataTable thead .sorting_asc:after {
 table.dataTable thead .sorting_desc:after {
   content: "\f0de";
 }
-
+.box{
+  margin-bottom: 10px;
+    padding: 10px;
+}
+.report-header{
+   padding-left: 10px;
+   margin-bottom: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: rgb(60 188 111);
+    padding: 5px;
+    border-radius: 2px;
+}
 .paging{
   display: flex;
   justify-content: space-between;
@@ -573,6 +594,7 @@ table.dataTable thead .sorting_desc:after {
 }
 .pagination {
   display: inline-block;
+  margin: 8px;
 }
 
 .pagination a {
