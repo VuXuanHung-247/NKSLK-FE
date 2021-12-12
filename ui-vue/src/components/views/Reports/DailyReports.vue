@@ -180,7 +180,7 @@
           </div>
         </div>
         <!-- Modal -->
-        <div class="modal fade" id="dialogModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" v-if="IsShowModal" id="dialogModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header-flex" style="padding: 10px;">
@@ -577,6 +577,9 @@ table.dataTable thead .sorting_desc:after {
 .box{
   margin-bottom: 10px;
     padding: 10px;
+}
+.modal-backdrop.in{
+  display: none;
 }
 .report-header{
    padding-left: 10px;
