@@ -114,11 +114,11 @@
 <script>
 /* eslint-disable */
 import axios from "axios";
-import DatePicker from "vue2-datepicker";
-import 'vue2-datepicker/index.css';
+// import DatePicker from "vue2-datepicker";
+// import 'vue2-datepicker/index.css';
 
 export default {
-  components: { DatePicker },
+  components: {  },
   name: 'Products',
   data() {
     return {

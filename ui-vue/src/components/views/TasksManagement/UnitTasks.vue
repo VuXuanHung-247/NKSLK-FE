@@ -13,6 +13,13 @@
             >
               Thêm đơn vị khoán
             </button>
+            <input
+              v-model="serachInput"
+              type="text"
+              class="form-control"
+              placeholder="Tìm kiếm theo tên"
+              style="border-radius: 3px; margin-top: 10px; width: 300px"
+            />
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -196,9 +203,37 @@ export default {
       IsActive: 1,
       IsBlurNext: false,
       IsBlurPrev: false,
+      serachInput:''
     };
   },
+  watch: {
+    "serachInput"() {
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        this.filerSerachInput();
+      }, 700);
+    },
+  },
   methods: {
+    filerSerachInput(){
+      axios
+        .post("http://localhost:43932/api/UnitTasks/GetAllUnitTasksByFilter", {
+          value: this.serachInput,
+        })
+        .then((response) => {
+          if (response.status == 204) {
+            alert("Không có có dữ liệu");
+          } else if (response.status == 200) {
+            this.unitTasks = response.data;
+            if (this.unitTasks != null && this.unitTasks != undefined) {
+              this.Page.TotalRecords = this.unitTasks.length;
+              this.Page.TotalPages = Math.ceil(
+                this.Page.TotalRecords / this.Page.SizePage
+              );
+            }
+          }
+        });
+    },
     // Phân trang nkslk làm riêng
     getCurrentPage(currentPage) {
       this.Page.FromPage = (currentPage - 1) * this.Page.SizePage;

@@ -64,11 +64,10 @@
             </button>
             <input
               v-model="serachByPriceInput"
-              type="number"
+              type="text"
               class="form-control"
-              placeholder="Tìm kiếm công việc theo đơn giá"
+              placeholder="Tìm kiếm công việc"
               style="border-radius: 3px; margin-top: 10px; width: 300px"
-              min="1" max="5"
             />
           </div>
           <!-- /.box-header -->
@@ -269,7 +268,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      serachByPriceInput: 0,
+      serachByPriceInput: '',
       unitTasks: [],
       //chứa dữ liệu data
       tasks: [],
@@ -294,7 +293,25 @@ export default {
     },
   },
   methods: {
-    filterTasksByPrice() {},
+    filterTasksByPrice() {
+      axios
+        .post("http://localhost:43932/api/Tasks/GetAllTasksByFilter", {
+          value: this.serachByPriceInput,
+        })
+        .then((response) => {
+          if (response.status == 204) {
+            alert("Không có có dữ liệu");
+          } else if (response.status == 200) {
+            this.tasks = response.data;
+            if (this.tasks != null && this.tasks != undefined) {
+              this.Page.TotalRecords = this.tasks.length;
+              this.Page.TotalPages = Math.ceil(
+                this.Page.TotalRecords / this.Page.SizePage
+              );
+            }
+          }
+        });
+    },
     getTasksBiggerAVG(){
       this.statisticalByNKSLK = false;
       axios

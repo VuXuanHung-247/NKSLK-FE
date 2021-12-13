@@ -328,7 +328,8 @@ export default {
           if (response.status == 204) {
             alert("Không có có dữ liệu");
           } else if (response.status == 200) {
-            this.unitTasks = response.data;
+            this.unitTasks = [];
+            // this.unitTasks = response.data;
           } else {
             alert("Lỗi kỹ thuật, liên hệ quang");
           }
